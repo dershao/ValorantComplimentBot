@@ -3,3 +3,4 @@ opencv==4.5.2
 pillow==8.2.0
 pygame==2.0.1
 keyboard==0.13.5
+sklearn==0.24.2
