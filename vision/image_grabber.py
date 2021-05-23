@@ -20,7 +20,7 @@ def find_valorant_agent(txt, agents):
 
 
 def get_name_image():
-    name_image = ImageGrab.grab(bbox=(160, 780, 270, 815)).convert('L')
+    name_image = ImageGrab.grab(bbox=(170, 800, 275, 840)).convert('L')
     name_image_inverted = PIL.ImageOps.invert(name_image)
 
     return name_image_inverted
@@ -35,5 +35,5 @@ def read_text_from_image(name_image_inverted):
 
 def get_kill_image():
 
-    kill_image = ImageGrab.grab(bbox=(875, 750, 1050, 900)).convert('L')
+    kill_image = ImageGrab.grab(bbox=(875, 775, 1050, 925)).convert('L')
     return kill_image

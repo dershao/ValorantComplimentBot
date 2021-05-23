@@ -51,6 +51,6 @@ if __name__ == '__main__':
             temp_audio = combine_audio(chosen_audio, name_audio)
             
             push_to_talk();
-            play_audio(chosen_audio, 'CABLE Input (VB-Audio Virtual Cable)')
+            play_audio(temp_audio, 'CABLE Input (VB-Audio Virtual Cable)')
 
         time.sleep(1)
