@@ -4,11 +4,13 @@ import pickle
 import time
 import os
 
-
 from vision.image_grabber import get_kill_image, get_name_image, read_text_from_image, find_valorant_agent
-from common.constants import VALORANT_AGENTS
+from common.constants import VALORANT_AGENTS, GENERAL_GREETINGS_AUDIO_PATH, AUDIO_DEVICE_VB_VIRTUAL_CABLE
+
 from audio.commands import push_to_talk
 from audio.audio_controls import play_audio, choose_audio, get_name_audio, combine_audio
+
+from gui.auto_compliments_info_ui import AutoComplimentInfoUI
 
 def load_pca(path='assets/preprocess/pca_preprocess.pkl'):
 
@@ -24,6 +26,14 @@ def load_scaler(path='assets/preprocess/scaler_preprocess.pkl'):
         return scaler
 
 
+def initialize_ui(scaler, pca):
+    name_image = get_name_image()
+    kill_image = get_kill_image()
+    scaled = scaler.transform(np.array(kill_image).reshape(1, -1))
+    pca_components = pca.transform(scaled)
+
+    return AutoComplimentInfoUI(name_image, kill_image, pca_components)
+
 
 if __name__ == '__main__':
 
@@ -33,24 +43,27 @@ if __name__ == '__main__':
     scaler = load_scaler()
     print("Ready")
 
+    info_ui = initialize_ui(scaler, pca)
+
     while True:
         
         name_image = get_name_image()
         text = read_text_from_image(name_image)
         agent = find_valorant_agent(text, VALORANT_AGENTS)
-        print(f'Found agent: {agent}')
 
         kill_image = get_kill_image()
-
         scaled = scaler.transform(np.array(kill_image).reshape(1, -1))
         pca_components = pca.transform(scaled)
 
-        if pca_components[0][1] > 50 and agent is not None:
+        info_ui.update_ui(name_image, kill_image, pca_components)
+
+        if pca_components[0][1] > 0 and pca_components[0][0] < 0 and agent is not None:
             chosen_audio = choose_audio()
             name_audio = get_name_audio(agent)
             temp_audio = combine_audio(chosen_audio, name_audio)
-            
-            push_to_talk();
-            play_audio(temp_audio, 'CABLE Input (VB-Audio Virtual Cable)')
+            push_to_talk()
+            play_audio(temp_audio, AUDIO_DEVICE_VB_VIRTUAL_CABLE, pause_after_audio=5)
+            push_to_talk()
+        
+        time.sleep(0.25)
 
-        time.sleep(1)
