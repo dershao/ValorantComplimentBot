@@ -6,21 +6,27 @@ import pygame
 from pygame import mixer
 from pathlib import Path
 
+# play audio in a distinct order
+glob_audio_count = 0
 
-def play_audio(audio_file, devicename):
+def play_audio(audio_file, devicename, pause_after_audio=0):
     mixer.init(devicename=devicename)
     mixer.music.load(audio_file)
     mixer.music.play()
-    time.sleep(5) # sleep to allow the audio to play
+    # this is needed in the main loop
+    # otherwise, the while loop will interrupt the audio and
+    # look for the next kill image
+    time.sleep(pause_after_audio)
 
 
 def choose_audio(audio_dir=Path(__file__).parent.parent / 'assets' / 'audio' / 'compliment'):
-
+    global glob_audio_count
     audio_files = list(map(lambda audio_file: os.path.join(audio_dir, audio_file), os.listdir(audio_dir)))
     n_of_audios = len(audio_files)
 
-    random_audio = random.randint(0, n_of_audios - 1)
-    chosen_audio = audio_files[random_audio]
+    chosen_audio = audio_files[glob_audio_count]
+    glob_audio_count += 1
+
     print(f'Chosen audio found at: {chosen_audio}')
 
     return chosen_audio

@@ -62,7 +62,7 @@ if __name__ == '__main__':
             name_audio = get_name_audio(agent)
             temp_audio = combine_audio(chosen_audio, name_audio)
             push_to_talk()
-            play_audio(temp_audio, AUDIO_DEVICE_VB_VIRTUAL_CABLE, pause_after_audio=5)
+            play_audio(temp_audio, AUDIO_DEVICE_VB_VIRTUAL_CABLE, 5)
             push_to_talk()
         
         time.sleep(0.25)
