@@ -2,13 +2,8 @@ from PIL import Image
 import PIL.ImageOps
 import pyscreenshot as ImageGrab
 import pytesseract
-import argparse
-import cv2
-import os
-import numpy as np
-import time
-import pickle
-import sklearn
+
+pytesseract.pytesseract.tesseract_cmd = '<LOCAL_PATH_TO_TESSERACT_EXECUTABLE>'
 
 
 def find_valorant_agent(txt, agents):
@@ -20,7 +15,13 @@ def find_valorant_agent(txt, agents):
 
 
 def get_name_image():
-    name_image = ImageGrab.grab(bbox=(170, 800, 275, 840)).convert('L')
+    """
+    The coordinates found in the 'bbox' are the coordinates of the screen to 
+    capture the name of the agent when spectating a player. These coordinates
+    will differ depending on game settings, screen resolution, etc.
+
+    """
+    name_image = ImageGrab.grab(bbox=(110, 800, 240, 850)).convert('L')
     name_image_inverted = PIL.ImageOps.invert(name_image)
 
     return name_image_inverted
@@ -34,6 +35,10 @@ def read_text_from_image(name_image_inverted):
 
 
 def get_kill_image():
-
-    kill_image = ImageGrab.grab(bbox=(875, 775, 1050, 925)).convert('L')
+    """
+    The coordinates found in the 'bbox' are the coordinates of the screen to 
+    capture the kill icon when spectating a player. These coordinates
+    will differ depending on game settings, screen resolution, etc.
+    """
+    kill_image = ImageGrab.grab(bbox=(891, 800, 1025, 950)).convert('L')
     return kill_image
